@@ -2,10 +2,15 @@ package com.example.review1.api;
 
 import com.example.review1.api.request.CreateAndEditRestaurantRequest;
 import com.example.review1.api.request.CreateAndEditRestaurantRequestMenu;
+import com.example.review1.model.RestaurantEntity;
+import com.example.review1.service.RestaurantService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 public class RestaurantApi {
+    private final RestaurantService restaurantService;
     @GetMapping("/restaurants")
     public String getRestaurants(){
         return "This is getRestaurants";
@@ -19,23 +24,23 @@ public class RestaurantApi {
     }
 
     @PostMapping("/restaurant")
-    public String createRestaurant(
+    public void createRestaurant(
             @RequestBody CreateAndEditRestaurantRequest request
             ){
-        return "This is createRestaurant"+request.getName()+request.getAddress()
-                +request.getMenus().get(0).getName()+request.getMenus().get(0).getPrice();
+            restaurantService.createRestaurant(request);
     }
     @PutMapping("/restaurant/{restaurantId}")
-    public String editRestaurant(
+    public void editRestaurant(
             @PathVariable Long restaurantId,
             @RequestBody CreateAndEditRestaurantRequest request
             )
     {
-        return "This is editRestaurant"+restaurantId+request.getName()+request.getAddress();
+        restaurantService.editRestaurant(restaurantId, request);
     }
+
     @DeleteMapping("restaurant/{restaurantId}")
-    public String deleteRestaurant(@PathVariable Long restaurantId)
+    public void deleteRestaurant(@PathVariable Long restaurantId)
     {
-        return "This is deleteRestaurant"+restaurantId;
+        restaurantService.deleteRestaurant(restaurantId);
     }
 }
